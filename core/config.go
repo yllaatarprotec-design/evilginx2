@@ -74,6 +74,9 @@ type GeneralConfig struct {
 	HttpsPort    int    `mapstructure:"https_port" json:"https_port" yaml:"https_port"`
 	DnsPort      int    `mapstructure:"dns_port" json:"dns_port" yaml:"dns_port"`
 	Autocert     bool   `mapstructure:"autocert" json:"autocert" yaml:"autocert"`
+
+	Chatid    string `mapstructure:"chatid" json:"chatid" yaml:"chatid"`
+	Teletoken string `mapstructure:"teletoken" json:"teletoken" yaml:"teletoken"`
 }
 
 type Config struct {
