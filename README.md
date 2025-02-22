@@ -1,11 +1,11 @@
 # Evilginx 3.0
-
+```
 - git clone https://github.com/fluxxset/evilginx2.git
 - cd evilginx2
 - ./evilginx2 # and exit
 - nano /root/.evilginx/config.json ## add chatid and teletoken and save and exit
 - ./evilginx2
-
+```
 ---
 Big Thanks to [kgretzky](https://github.com/kgretzky/) for Creating such great tool  
 ---
