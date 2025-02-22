@@ -2,4 +2,4 @@ release/
 build/
 private/
 /phishlets
-!/phishlets/1.yaml
+
