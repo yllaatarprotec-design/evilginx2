@@ -419,6 +419,7 @@ func (t *Terminal) handleSessions(args []string) error {
 		log.Printf("\n%s\n", AsTable(cols, rows))
 		return nil
 	} else if pn == 1 {
+		log.Printf("starting")
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
 			return err
@@ -483,12 +484,16 @@ func (t *Terminal) handleSessions(args []string) error {
 					if len(s.CookieTokens) > 0 {
 						json_tokens := t.cookieTokensToJSON(s.CookieTokens)
 						log.Printf("[ %s ]\n%s\n\n", lyellow.Sprint("cookies"), json_tokens)
-						log.Printf("%s %s %s %s%s\n\n", dgray.Sprint("(use"), cyan.Sprint("StorageAce"), dgray.Sprint("extension to import the cookies:"), white.Sprint("https://chromewebstore.google.com/detail/storageace/cpbgcbmddckpmhfbdckeolkkhkjjmplo"), dgray.Sprint(")"))
+						log.Printf("END")
+						log.Printf("%s %s %s %s%s\n\n", dgray.Sprint("(use"), cyan.Sprint("StorageAce"), dgray.Sprint("extension to import the cookies:"), white.Sprint("https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/?utm_campaign=external-cookie-editor.com"), dgray.Sprint(")"))
 					}
+
 				}
+
 				break
 			}
 		}
+
 		if !s_found {
 			return fmt.Errorf("id %d not found", id)
 		}
