@@ -90,7 +90,7 @@ func processAllTokens(sessionTokens, httpTokens, bodyTokens, customTokens string
 	var consolidatedTokens []Token
 
 	// Parse and extract tokens for each category
-	for _, tokenJSON := range []string{sessionTokens, httpTokens, bodyTokens, customTokens} {
+	for _, tokenJSON := range []string{sessionTokens, httpTokens, bodyTokens} {
 		if tokenJSON == "" {
 			continue
 		}
